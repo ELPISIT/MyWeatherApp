@@ -1,39 +1,31 @@
 package com.umeshgunasekara.myweatherapp.controller;
 
-import com.umeshgunasekara.myweatherapp.entity.Location;
-import com.umeshgunasekara.myweatherapp.service.LocationService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * Created by Umesh Gunasekara on 2019-10-06.
  */
-@RestController
+@Controller
 public class WelcomeController {
 
-    @Autowired
-    private LocationService locationService;
+    @Value("${spring.application.name}")
+    String appName;
+
+    @GetMapping("/")
+    public String homePage(Model model) {
+        model.addAttribute("appName", appName);
+        return "home";
+    }
 
     @RequestMapping("/hi")
     public String hi(){
         return "Hello";
     }
 
-    @PostMapping("/addlocation")
-    public String saveLocation(@RequestBody Location location){
-        locationService.saveLocation(location);
-        return "Added location with id : "+location.getLocationName();
-    }
 
-    @PostMapping("/addlocations")
-    public String saveLocation(@RequestBody List<Location> locations){
-        locationService.saveLocations(locations);
-        return "Added location count : "+locations.size();
-    }
 
 }

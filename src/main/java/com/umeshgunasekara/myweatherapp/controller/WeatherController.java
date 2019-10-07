@@ -66,13 +66,16 @@ public class WeatherController {
             ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             DarkSkyWeather weather = mapper.readValue(resp.getBody(), DarkSkyWeather.class);
             weather.getHourlyData().forEach(item->{
+                item.set_id(loc.get_id()+item.getTime());
                 item.setLocationId(loc.get_id());
             });
             darkSkyWeathers.add(weather);
         }
 
         darkSkyWeathers.forEach(item->{
-            weatherService.saveWeatherForcast(item.getHourlyData());
+            item.getHourlyData().forEach(itemw->{
+                weatherService.saveWeather(itemw);
+            });
         });
         return darkSkyWeathers.size()+"";
     }

@@ -12,9 +12,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @ToString
 @Document(collection = "weather")
 public class Weather {
-
-    private String locationId;
     @Id
+    private String _id;
+    private String locationId;
     private String time;
     private String summary;
     private String icon;

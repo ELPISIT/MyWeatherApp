@@ -4,30 +4,63 @@
     <meta charset="UTF-8">
     <title>Home Page</title>
     <link rel="stylesheet" th:href="@{webjars/bootstrap/4.3.1/css/bootstrap.min.css}"/>
+    <!--<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>-->
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!--<script src="jquery-3.4.1.min.js"></script>-->
+    <!--<script th:src="@{/webjars/jquery/jquery.min.js}"></script>-->
+    <script th:src="@{/js/dateControl.js}"></script>
+    <script th:src="@{/js/jquery-3.4.1.min.js}"></script>
 </head>
 <body>
 <div class="container">
     <h1>Hello !</h1>
     <p>Welcome to <span th:text="${appName}">Our App</span></p>
     <div class="row">
-        <div class="col-sm">
-            One of three columns
+        <div class="col">
+            <form action="weather" method="post">
+                <input type="hidden" name="city" value="Campbell,CA">
+                <button class="btn btn-primary" type="submit">Campbell,CA</button>
+            </form>
         </div>
-        <div class="col-sm">
-            One of three columns
+        <div class="col">
+            <form action="weather" method="post">
+                <input type="hidden" name="city" value="Singapore">
+                <button class="btn btn-primary" type="submit">Singapore</button>
+            </form>
         </div>
-        <div class="col-sm">
-            One of three columns
+        <div class="col">
+            <form action="weather" method="post">
+                <input type="hidden" name="city" value="Omaha,NE">
+                <button class="btn btn-primary" type="submit">Omaha,NE</button>
+            </form>
         </div>
-    </div>
-    <div class="row">
-        <form action="weather" method="post">
-            <div>
-                <label>Enter the city name to check the weather</label>
-                <input type="text" name="city">
-            </div>
-            <button type="submit">Submit</button>
-        </form>
+        <div class="col">
+            <form action="weather" method="post">
+                <input type="hidden" name="city" value="Austin,TX">
+                <button class="btn btn-primary" type="submit">Austin,TX</button>
+            </form>
+        </div>
+        <div class="col">
+            <form action="weather" method="post">
+                <input type="hidden" name="city" value="Niseko,Japan">
+                <button class="btn btn-primary" type="submit">Niseko,Japan</button>
+            </form>
+        </div>
+        <div class="col">
+            <form action="weather" method="post">
+                <input type="hidden" name="city" value="Nara,Japan">
+                <button class="btn btn-primary" type="submit">Nara,Japan</button>
+            </form>
+        </div>
+        <div class="col">
+            <form action="weather" method="post">
+                <input type="hidden" name="city" value="Jakarta,Indonesia">
+                <button class="btn btn-primary" type="submit">Jakarta,Indonesia</button>
+            </form>
+        </div>
+
     </div>
 </div>
 </body>

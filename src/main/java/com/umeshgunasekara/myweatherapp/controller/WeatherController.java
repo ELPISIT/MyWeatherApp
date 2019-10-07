@@ -44,6 +44,9 @@ public class WeatherController {
     RestTemplate restTemplate;
 
     @Autowired
+    ObjectMapper objectMapper;
+
+    @Autowired
     private DarkSkyUrl darkSkyUrl;
 
     @RequestMapping("/hi2")
@@ -63,8 +66,8 @@ public class WeatherController {
 
             ResponseEntity<String> resp= restTemplate.exchange(uri, HttpMethod.GET, null, String.class);
 
-            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            DarkSkyWeather weather = mapper.readValue(resp.getBody(), DarkSkyWeather.class);
+//            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            DarkSkyWeather weather = objectMapper.readValue(resp.getBody(), DarkSkyWeather.class);
             weather.getHourlyData().forEach(item->{
                 item.set_id(loc.get_id()+item.getTime());
                 item.setLocationId(loc.get_id());
@@ -83,8 +86,8 @@ public class WeatherController {
     @PostMapping("/hi3")
     public String hi3(@RequestBody String s)throws JsonParseException, JsonMappingException, IOException {
         Optional<Location> location=locationService.findLocationByLocationName("Austin,TX");
-        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        DarkSkyWeather darkSkyWeather=mapper.readValue(s,DarkSkyWeather.class);
+//        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        DarkSkyWeather darkSkyWeather=objectMapper.readValue(s,DarkSkyWeather.class);
         darkSkyWeather.getHourlyData().forEach(item->{
             item.setLocationId(location.get().get_id());
         });

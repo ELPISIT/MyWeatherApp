@@ -16,6 +16,7 @@ public class Location {
     @Id
     private String _id;
     private String locationName;
+    private String timezone;
     private double locationLongitude;
     private double locationLatitude;
 }

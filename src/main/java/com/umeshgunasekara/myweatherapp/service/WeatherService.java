@@ -38,4 +38,18 @@ public interface WeatherService {
      * @apiNote Add All Weather Recodes.
      */
     public void saveWeatherForcast(Iterable<Weather> weatherForcast);
+
+    /**
+     * @param _id and status as String Object.
+     * @return Weather Optional Object.
+     * @apiNote Get Weather By weatherId.
+     */
+    public Optional<Weather> findWeatherBy_idAndStatus(String _id, String status);
+
+    /**
+     * @param locationId as String Object.
+     * @return Weather Iterable Object.
+     * @apiNote Get All Weather By locationId.
+     */
+    public Iterable<Weather> getAllByLocationId(String locationId);
 }

@@ -18,6 +18,8 @@ import java.util.Map;
 @ToString
 @Document(collection = "darkskyweather")
 public class DarkSkyWeather {
+
+    private String locationName;
     private double latitude;
     private double longitude;
     private String timezone;

@@ -41,4 +41,14 @@ public class WeatherServiceImpl implements WeatherService {
     public void saveWeatherForcast(Iterable<Weather> weatherForcast) {
         weatherDao.insert(weatherForcast);
     }
+
+    @Override
+    public Optional<Weather> findWeatherBy_idAndStatus(String _id, String status) {
+        return weatherDao.findWeatherBy_idAndStatus(_id, status);
+    }
+
+    @Override
+    public Iterable<Weather> getAllByLocationId(String locationId) {
+        return weatherDao.getAllByLocationId(locationId);
+    }
 }

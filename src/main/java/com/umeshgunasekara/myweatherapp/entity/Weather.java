@@ -14,6 +14,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Weather {
     @Id
     private String _id;
+    private String datel;
+    private String dates;
+    private String hourofday;
+    private String status;
     private String locationId;
     private String time;
     private String summary;

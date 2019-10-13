@@ -17,16 +17,16 @@
 <div class="container">
     <div class="row">
     <div class="col" th:each="darkSkyWeather,iterStat : ${weatherData}">
-        <div class="page-content page-container" id="page-content">
-            <div class="padding">
-                <div class="row container d-flex justify-content-center">
-                    <div class="col-lg-8 grid-margin stretch-card">
+<!--        <div class="page-content page-container" id="page-content">-->
+<!--            <div class="padding">-->
+<!--                <div class="row container d-flex justify-content-center">-->
+<!--                    <div class="col grid-margin stretch-card">ii-->
                         <!--weather card-->
                         <div class="card card-weather">
                             <div class="card-body">
                                 <div class="weather-date-location">
                                     <h3><span th:text="${darkSkyWeather.getCurrently().getDatel()}"></span></h3>
-                                    <h4>Hour : <span th:text="${darkSkyWeather.getCurrently().getHourofday()}"></span></h4>
+                                    <h4><span th:text="${darkSkyWeather.getCurrently().getHourofday()}"></span></h4>
                                     <p class="text-gray"><span th:text="${darkSkyWeather.getLocationName()}"></span></p>
                                 </div>
                                 <div class="weather-data d-flex">
@@ -39,11 +39,11 @@
                             <div class="card-body p-0">
                                 <div class="d-flex weakly-weather">
                                     <div class="weakly-weather-item">
-                                        <p class="mb-0"><span th:text="${darkSkyWeather.getHourlyData().getTemperature()}"></span></p> <i class="mdi mdi-weather-cloudy"></i>
+                                        <p class="mb-0"> Sun </p> <i class="mdi mdi-weather-cloudy"></i>
                                         <p class="mb-0"> 30° </p>
                                     </div>
                                     <div class="weakly-weather-item">
-                                        <p class="mb-1"> Mond </p> <i class="mdi mdi-weather-hail"></i>
+                                        <p class="mb-1"> Mon </p> <i class="mdi mdi-weather-hail"></i>
                                         <p class="mb-0"> 31° </p>
                                     </div>
                                     <div class="weakly-weather-item">
@@ -70,14 +70,15 @@
                             </div>
                         </div>
                         <!--weather card ends-->
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--                    </div>ii-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
     </div>
     <div class="row" th:each="darkSkyWeather,iterStat : ${weatherData}">
         <div>
+            <h4>Weather Forcast of <span th:text="${darkSkyWeather.getLocationName()}"></span></h4>
         <table class="table">
             <thead class="thead-dark">
             <tr>

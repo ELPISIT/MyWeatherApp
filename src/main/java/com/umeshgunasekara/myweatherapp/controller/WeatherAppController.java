@@ -27,6 +27,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @ComponentScan("com.umeshgunasekara.myweatherapp.config")
 @Controller
@@ -50,24 +52,21 @@ public class WeatherAppController {
     @Autowired
     private DarkSkyUrl darkSkyUrl;
 
-    @RequestMapping(value = "/weather",method= RequestMethod.POST )
-    public String homePage(Model model, @RequestParam String city) throws IOException{
+    @RequestMapping(method= RequestMethod.POST, value = "/weather")
+    public String watherDetailsPage(Model model, @RequestParam String city) throws IOException{
         List<Location> locationList= (List<Location>) locationService.getAllLocations();
         List<DarkSkyWeather> darkSkyWeathers=new ArrayList<DarkSkyWeather>();
 
         Map<String, ZoneId> timezones=new HashMap<String, ZoneId>();
-        String pattern = "EEEEE MMMMM yyyy";
-        String pattern2 = "yyyy-MM-dd";
+        String pattern = "EEEEE MMMMM yyyy", pattern2 = "yyyy-MM-dd", tState="Original";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat(pattern2);
 
         for(Location location:locationList){
             timezones.put(location.getLocationName(),ZoneId.of(location.getTimezone()));
-            System.out.println(location.getLocationName()+" , "+location.getTimezone());
             Timestamp timestamp = Timestamp.valueOf(ZonedDateTime.now(ZoneId.of(location.getTimezone())).withMinute(0).withSecond(0).toLocalDateTime());
-            String timestampstr=(timestamp.getTime()/1000L)+"";
-            Optional<Weather> weather=weatherService.findWeatherBy_idAndStatus(location.get_id()+timestampstr, "Original");
-            System.out.println(location.getLocationName()+" , "+weather.isPresent());
+            long locatonTimeStamp=(timestamp.getTime()/1000L);
+            Optional<Weather> weather=weatherService.findWeatherBy_idAndStatus(location.get_id()+""+locatonTimeStamp, tState);
             if(!weather.isPresent()){
                 UriComponents uriComponents = UriComponentsBuilder
                         .newInstance()
@@ -77,37 +76,32 @@ public class WeatherAppController {
                         .buildAndExpand(darkSkyUrl.getApiKey(),location.getLocationLatitude(),location.getLocationLongitude());
 
                 String uri = uriComponents.toUriString();
-
                 ResponseEntity<String> resp= restTemplate.exchange(uri, HttpMethod.GET, null, String.class);
 
-//            ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 DarkSkyWeather darkSkyWeather = objectMapper.readValue(resp.getBody(), DarkSkyWeather.class);
-
+                darkSkyWeather.setLocationName(location.getLocationName());
                 Weather currentlyWeather=darkSkyWeather.getCurrently();
-                long temp_timestamp = Long.parseLong(currentlyWeather.getTime())*1000L;
-                LocalDateTime triggerTime =
-                        LocalDateTime.ofInstant(Instant.ofEpochMilli(temp_timestamp),
+                long temp_timestamp = currentlyWeather.getTime()*1000L;
+                LocalDateTime triggerTime =LocalDateTime.ofInstant(Instant.ofEpochMilli(temp_timestamp),
                                 ZoneId.of(location.getTimezone()));
                 Timestamp temptimestamp = Timestamp.valueOf(triggerTime.withMinute(0).withSecond(0));
-                currentlyWeather.setTime(temptimestamp.getTime()/1000L+"");
+                currentlyWeather.setTime(temptimestamp.getTime()/1000L);
                 darkSkyWeather.getHourlyData().add(currentlyWeather);
 
                 darkSkyWeather.getHourlyData().forEach(item->{
-                    System.out.println(item.getTime()+" , "+timestampstr);
-                    long inner_timestamp = Long.parseLong(item.getTime())*1000L;
-                    ZonedDateTime innerTime =
-                            ZonedDateTime.ofInstant(Instant.ofEpochMilli(inner_timestamp),
+                    long inner_timestamp = item.getTime()*1000L;
+                    ZonedDateTime innerTime =ZonedDateTime.ofInstant(Instant.ofEpochMilli(inner_timestamp),
                                     ZoneId.of(location.getTimezone()));
                     Date output = Date.from(innerTime.toInstant());
                     item.setDatel(simpleDateFormat.format(output));
                     item.setDates(simpleDateFormat2.format(output));
-                    item.setHourofday(innerTime.getHour()+"");
+                    String hourOfDay=(innerTime.getHour()>12)?(innerTime.getHour()-12)+" PM":innerTime.getHour()+" AM";
+                    item.setHourofday(hourOfDay);
 
-                    item.set_id(location.get_id()+item.getTime());
+                    item.set_id(location.get_id()+""+item.getTime());
                     item.setLocationId(location.get_id());
-                    if(timestampstr.trim().equals(item.getTime())){
-                        item.setStatus("Original");
-                        System.out.println("Original");
+                    if(locatonTimeStamp==item.getTime()){
+                        item.setStatus(tState);
                         darkSkyWeather.setCurrently(item);
                     }else{
                         item.setStatus("Forcast");
@@ -126,24 +120,21 @@ public class WeatherAppController {
                         darkSkyWeather.setCurrently(item);
                     }
                 });
+                List<Weather> hourlyData1=hourlyData.stream().filter(a->a.getTime()<=(locatonTimeStamp-(3600*12*3))).collect(Collectors.toList());
+                if(!hourlyData1.isEmpty()){
+                    weatherService.deleteWeathers(hourlyData1);
+                }
+                List<Weather> hourlyData2=hourlyData.stream().filter(a->(a.getTime()>=locatonTimeStamp&&a.getTime()<=(locatonTimeStamp+(3600*12)))).collect(Collectors.toList());
                 darkSkyWeather.setLocationName(location.getLocationName());
                 darkSkyWeather.setLatitude(location.getLocationLatitude());
                 darkSkyWeather.setLongitude(location.getLocationLongitude());
                 darkSkyWeather.setTimezone(location.getTimezone());
-                darkSkyWeather.setHourlyData(hourlyData);
+                darkSkyWeather.setHourlyData(hourlyData2);
                 darkSkyWeathers.add(darkSkyWeather);
             }
         }
-        System.out.println(city);
-        System.out.println("test data");
-        System.out.println(darkSkyWeathers.size());
 
         model.addAttribute("weatherData", darkSkyWeathers);
         return "weatherdata";
-    }
-
-    @RequestMapping(value = "/abc",method= RequestMethod.POST )
-    public void getTimeZone(Model model, @RequestBody String s){
-        System.out.println(s);
     }
 }

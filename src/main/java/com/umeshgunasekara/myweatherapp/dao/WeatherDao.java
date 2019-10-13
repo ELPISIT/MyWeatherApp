@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface WeatherDao extends MongoRepository<Weather, String> {
     public Optional<Weather> findWeatherBy_idAndStatus(String _id, String status);
     public Iterable<Weather> getAllByLocationId(String locationId);
+    public Iterable<Weather> getAllByTimeGreaterThanEqual();
 }

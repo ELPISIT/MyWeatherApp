@@ -51,4 +51,9 @@ public class WeatherServiceImpl implements WeatherService {
     public Iterable<Weather> getAllByLocationId(String locationId) {
         return weatherDao.getAllByLocationId(locationId);
     }
+
+    @Override
+    public void deleteWeathers(Iterable<Weather> weathers) {
+        weatherDao.deleteAll(weathers);
+    }
 }

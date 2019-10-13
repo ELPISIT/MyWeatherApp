@@ -52,4 +52,10 @@ public interface WeatherService {
      * @apiNote Get All Weather By locationId.
      */
     public Iterable<Weather> getAllByLocationId(String locationId);
+
+    /**
+     * @param weathers as Iterable Object.
+     * @apiNote delete All Weathers.
+     */
+    public void deleteWeathers(Iterable<Weather> weathers);
 }

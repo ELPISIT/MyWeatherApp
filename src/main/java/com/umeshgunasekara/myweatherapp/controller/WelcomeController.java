@@ -15,13 +15,18 @@ public class WelcomeController {
     @Value("${spring.application.name}")
     String appName;
 
-    @GetMapping("/")
+    @RequestMapping(method=RequestMethod.GET, value="/")
     public String homePage(Model model) {
         model.addAttribute("appName", appName);
         return "home";
     }
 
-    @RequestMapping("/hi")
+//    @RequestMapping(method=RequestMethod.GET, value="/")
+//    public String indexPage() {
+//        return "redirect:" + "/weather";
+//    }
+
+    @RequestMapping(method=RequestMethod.GET, value="/hi")
     public String hi(){
         return "Hello";
     }

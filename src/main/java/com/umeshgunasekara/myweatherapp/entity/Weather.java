@@ -19,7 +19,7 @@ public class Weather {
     private String hourofday;
     private String status;
     private String locationId;
-    private String time;
+    private long time;
     private String summary;
     private String icon;
     private double nearestStormDistance;

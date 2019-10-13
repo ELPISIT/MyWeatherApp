@@ -88,6 +88,8 @@ public class WeatherAppController {
                 currentlyWeather.setTime(temptimestamp.getTime()/1000L);
                 darkSkyWeather.getHourlyData().add(currentlyWeather);
 
+                List<Weather> hourlyData2=darkSkyWeather.getHourlyData().stream().filter(a->(a.getTime()>=locatonTimeStamp&&a.getTime()<=(locatonTimeStamp+(3600*24)))).collect(Collectors.toList());
+                darkSkyWeather.setHourlyData(hourlyData2);
                 darkSkyWeather.getHourlyData().forEach(item->{
                     long inner_timestamp = item.getTime()*1000L;
                     ZonedDateTime innerTime =ZonedDateTime.ofInstant(Instant.ofEpochMilli(inner_timestamp),
@@ -112,6 +114,7 @@ public class WeatherAppController {
                 darkSkyWeather.getHourlyData().forEach(itemw->{
                     weatherService.saveWeather(itemw);
                 });
+
             }else{
                 DarkSkyWeather darkSkyWeather=new DarkSkyWeather();
                 List<Weather> hourlyData=(List<Weather>)weatherService.getAllByLocationId(location.get_id());

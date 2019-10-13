@@ -120,11 +120,11 @@ public class WeatherAppController {
                         darkSkyWeather.setCurrently(item);
                     }
                 });
-                List<Weather> hourlyData1=hourlyData.stream().filter(a->a.getTime()<=(locatonTimeStamp-(3600*12*3))).collect(Collectors.toList());
+                List<Weather> hourlyData1=hourlyData.stream().filter(a->a.getTime()<=(locatonTimeStamp-(3600*24*3))).collect(Collectors.toList());
                 if(!hourlyData1.isEmpty()){
                     weatherService.deleteWeathers(hourlyData1);
                 }
-                List<Weather> hourlyData2=hourlyData.stream().filter(a->(a.getTime()>=locatonTimeStamp&&a.getTime()<=(locatonTimeStamp+(3600*12)))).collect(Collectors.toList());
+                List<Weather> hourlyData2=hourlyData.stream().filter(a->(a.getTime()>=locatonTimeStamp&&a.getTime()<=(locatonTimeStamp+(3600*24)))).collect(Collectors.toList());
                 darkSkyWeather.setLocationName(location.getLocationName());
                 darkSkyWeather.setLatitude(location.getLocationLatitude());
                 darkSkyWeather.setLongitude(location.getLocationLongitude());
